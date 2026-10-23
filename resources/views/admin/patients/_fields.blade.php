@@ -1,0 +1,8 @@
+<div class="grid gap-4 {{ $cols ?? 'sm:grid-cols-2' }}">
+    <div><label class="a-label" for="first_name">First name</label><input id="first_name" name="first_name" class="a-input w-full" value="{{ old('first_name', $patient->first_name) }}" required></div>
+    <div><label class="a-label" for="last_name">Last name</label><input id="last_name" name="last_name" class="a-input w-full" value="{{ old('last_name', $patient->last_name) }}" required></div>
+    <div><label class="a-label" for="email">Email</label><input id="email" name="email" type="email" class="a-input w-full" value="{{ old('email', $patient->email) }}" required><p class="mt-1 text-xs text-ink-3">The portal invitation goes here. Check it with the patient.</p></div>
+    <div><label class="a-label" for="phone">Phone <span class="font-normal text-ink-3">(optional)</span></label><input id="phone" name="phone" type="tel" class="a-input w-full" value="{{ old('phone', $patient->phone) }}"></div>
+    <div><label class="a-label" for="date_of_birth">Date of birth <span class="font-normal text-ink-3">(recommended)</span></label><input id="date_of_birth" name="date_of_birth" type="date" class="a-input w-full" value="{{ old('date_of_birth', $patient->date_of_birth?->toDateString()) }}"><p class="mt-1 text-xs text-ink-3">If set, the patient must confirm it when activating.</p></div>
+    <div><label class="a-label" for="hospital_number">Hospital number <span class="font-normal text-ink-3">(optional)</span></label><input id="hospital_number" name="hospital_number" class="a-input w-full" value="{{ old('hospital_number', $patient->hospital_number) }}"></div>
+</div>

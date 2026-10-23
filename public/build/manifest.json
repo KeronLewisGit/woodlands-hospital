@@ -1,0 +1,77 @@
+{
+  "_atkinson-hyperlegible-next-400-normal-DPp7N0cD.woff": {
+    "file": "assets/atkinson-hyperlegible-next-400-normal-DPp7N0cD.woff",
+    "src": "_atkinson-hyperlegible-next-400-normal-DPp7N0cD.woff"
+  },
+  "_atkinson-hyperlegible-next-400-normal-FfmJh7DR.woff2": {
+    "file": "assets/atkinson-hyperlegible-next-400-normal-FfmJh7DR.woff2",
+    "src": "_atkinson-hyperlegible-next-400-normal-FfmJh7DR.woff2"
+  },
+  "_atkinson-hyperlegible-next-600-normal-BBuhw47K.woff2": {
+    "file": "assets/atkinson-hyperlegible-next-600-normal-BBuhw47K.woff2",
+    "src": "_atkinson-hyperlegible-next-600-normal-BBuhw47K.woff2"
+  },
+  "_atkinson-hyperlegible-next-600-normal-BhgCag5w.woff": {
+    "file": "assets/atkinson-hyperlegible-next-600-normal-BhgCag5w.woff",
+    "src": "_atkinson-hyperlegible-next-600-normal-BhgCag5w.woff"
+  },
+  "_atkinson-hyperlegible-next-700-normal-C2qZD_Q9.woff": {
+    "file": "assets/atkinson-hyperlegible-next-700-normal-C2qZD_Q9.woff",
+    "src": "_atkinson-hyperlegible-next-700-normal-C2qZD_Q9.woff"
+  },
+  "_atkinson-hyperlegible-next-700-normal-Dpiyiu63.woff2": {
+    "file": "assets/atkinson-hyperlegible-next-700-normal-Dpiyiu63.woff2",
+    "src": "_atkinson-hyperlegible-next-700-normal-Dpiyiu63.woff2"
+  },
+  "_fonts-CqTML1fk.css": {
+    "file": "assets/fonts-CqTML1fk.css",
+    "src": "_fonts-CqTML1fk.css"
+  },
+  "_newsreader-500-italic-Bsgye1qA.woff2": {
+    "file": "assets/newsreader-500-italic-Bsgye1qA.woff2",
+    "src": "_newsreader-500-italic-Bsgye1qA.woff2"
+  },
+  "_newsreader-500-italic-m-xI0GeS.woff": {
+    "file": "assets/newsreader-500-italic-m-xI0GeS.woff",
+    "src": "_newsreader-500-italic-m-xI0GeS.woff"
+  },
+  "_newsreader-500-normal-B66TYsaK.woff2": {
+    "file": "assets/newsreader-500-normal-B66TYsaK.woff2",
+    "src": "_newsreader-500-normal-B66TYsaK.woff2"
+  },
+  "_newsreader-500-normal-DFwuUcdu.woff": {
+    "file": "assets/newsreader-500-normal-DFwuUcdu.woff",
+    "src": "_newsreader-500-normal-DFwuUcdu.woff"
+  },
+  "_newsreader-600-italic-BXGU4hd9.woff2": {
+    "file": "assets/newsreader-600-italic-BXGU4hd9.woff2",
+    "src": "_newsreader-600-italic-BXGU4hd9.woff2"
+  },
+  "_newsreader-600-italic-QBRrDGPr.woff": {
+    "file": "assets/newsreader-600-italic-QBRrDGPr.woff",
+    "src": "_newsreader-600-italic-QBRrDGPr.woff"
+  },
+  "_newsreader-600-normal-30OJ_TG_.woff2": {
+    "file": "assets/newsreader-600-normal-30OJ_TG_.woff2",
+    "src": "_newsreader-600-normal-30OJ_TG_.woff2"
+  },
+  "_newsreader-600-normal-DUnT2r2g.woff": {
+    "file": "assets/newsreader-600-normal-DUnT2r2g.woff",
+    "src": "_newsreader-600-normal-DUnT2r2g.woff"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-BI-8MkvR.css",
+    "name": "app",
+    "names": [
+      "app.css"
+    ],
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-CbRCCbRS.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}
