@@ -8,7 +8,7 @@
     <span class="leading-none {{ $tone === 'light' ? 'text-white' : 'text-ink' }}">
         <span class="font-display block text-[1.55rem] font-semibold tracking-[-0.01em]">Woodlands</span>
         @unless ($compact)
-            <span class="mt-1 block whitespace-nowrap text-[0.625rem] font-bold uppercase tracking-[0.2em] {{ $tone === 'light' ? 'text-white/75' : 'text-ink-3' }}">Hospital · Est. 1969</span>
+            <span class="mt-1 block whitespace-nowrap text-[0.6875rem] font-bold uppercase tracking-[0.16em] {{ $tone === 'light' ? 'text-white/75' : 'text-ink-3' }}">Hospital · Est. 1969</span>
         @endunless
     </span>
 </span>

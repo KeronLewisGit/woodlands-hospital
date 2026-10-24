@@ -91,12 +91,12 @@
             </div>
             <div class="panel p-5">
                 <p class="font-bold">Rather phone?</p>
-                <ul class="mt-3 space-y-2 text-[0.9375rem]">
-                    <li><a class="text-link" href="{{ tel_href(setting('phone_main'), setting('ext_clinics')) }}">Clinics, ext {{ setting('ext_clinics') }}</a></li>
-                    <li><a class="text-link" href="{{ tel_href(setting('phone_main'), setting('ext_radiology')) }}">Radiology &amp; ultrasound, ext {{ setting('ext_radiology') }}</a></li>
-                    <li><a class="text-link" href="{{ tel_href(setting('phone_main'), setting('ext_lab')) }}">Laboratory, ext {{ setting('ext_lab') }}</a></li>
+                <ul class="mt-2 text-[0.9375rem]">
+                    <li><a class="text-link inline-flex min-h-11 items-center" href="{{ tel_href(setting('phone_main'), setting('ext_clinics')) }}">Clinics, ext {{ setting('ext_clinics') }}</a></li>
+                    <li><a class="text-link inline-flex min-h-11 items-center" href="{{ tel_href(setting('phone_main'), setting('ext_radiology')) }}">Radiology &amp; ultrasound, ext {{ setting('ext_radiology') }}</a></li>
+                    <li><a class="text-link inline-flex min-h-11 items-center" href="{{ tel_href(setting('phone_main'), setting('ext_lab')) }}">Laboratory, ext {{ setting('ext_lab') }}</a></li>
                 </ul>
-                <p class="mt-3 text-sm text-ink-3">Main line {{ format_phone(setting('phone_main'), true) }}</p>
+                <p class="mt-2 text-sm text-ink-3">Main line {{ format_phone(setting('phone_main'), true) }}</p>
             </div>
         </aside>
     </div>

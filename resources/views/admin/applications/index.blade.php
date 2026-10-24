@@ -9,7 +9,7 @@
     <form method="GET" class="mt-4 flex flex-wrap gap-2">
         @if ($filters['status'])<input type="hidden" name="status" value="{{ $filters['status'] }}">@endif
         <label class="sr-only" for="job">Job</label>
-        <select id="job" name="job" class="a-input"><option value="">Every job</option>@foreach ($jobs as $j)<option value="{{ $j->id }}" @selected($filters['job'] === (string) $j->id)>{{ $j->title }}</option>@endforeach</select>
+        <select id="job" name="job" class="a-input min-w-0 max-w-full"><option value="">Every job</option>@foreach ($jobs as $j)<option value="{{ $j->id }}" @selected($filters['job'] === (string) $j->id)>{{ $j->title }}</option>@endforeach</select>
         <label class="sr-only" for="q">Search</label><input id="q" name="q" value="{{ $filters['q'] }}" class="a-input" placeholder="Name, email, reference">
         <button class="a-btn a-btn-ghost">Filter</button>
     </form>

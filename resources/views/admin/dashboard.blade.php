@@ -95,10 +95,10 @@
             <section class="a-card p-5" aria-labelledby="svc-title">
                 <h2 id="svc-title" class="font-bold">By service</h2>
                 <p class="text-sm text-ink-3">Requests, last {{ $chartDays }} days</p>
-                <ul class="mt-4 space-y-3">
+                <ul class="mt-2">
                     @foreach ($byService as $row)
                         <li>
-                            <a href="{{ route('admin.appointments.index', ['service' => $row['value']]) }}" class="group grid grid-cols-[10rem_1fr_2.5rem] items-center gap-3 text-sm">
+                            <a href="{{ route('admin.appointments.index', ['service' => $row['value']]) }}" class="group grid min-h-11 grid-cols-[10rem_1fr_2.5rem] items-center gap-3 text-sm">
                                 <span class="truncate text-ink-2 group-hover:text-ink">{{ $row['label'] }}</span>
                                 <span class="h-5"><span class="bar block h-full rounded-r bg-series" style="width: {{ $row['count'] / $svcMax * 100 }}%; min-width: {{ $row['count'] ? '2px' : '0' }}"></span></span>
                                 <span class="num text-right font-semibold">{{ number_format($row['count']) }}</span>
