@@ -317,7 +317,7 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>
   </div>
   <div class="meta">
     <div><b>Prepared for</b><span class="n">Woodlands Hospital Limited</span><br>110–111 Carmichael Street, North Cummingsburg<br>Georgetown, Guyana</div>
-    <div><b>Prepared by</b><span class="n">Keron Lewis, Code Canvas Consultants Ltd</span><br>Port of Spain · codecanvastt.com<br>+1 868 466-CODE · keronlewis@live.com</div>
+    <div><b>Prepared by</b><span class="n">Keron Lewis, Code Canvas Consultants Ltd</span><br>Port of Spain · codecanvastt.com<br>+1 868 466-CODE · info@codecanvastt.com</div>
   </div>
 </section>
 
@@ -483,7 +483,7 @@ ${PHONES.map((row, i) => `
     <p class="eyebrow">Contact</p>
     <p style="font-family:'Newsreader',Georgia,serif;font-size:16pt;color:var(--forest-900)">Keron Lewis</p>
     <p>Director, Code Canvas Consultants Ltd · Port of Spain, Trinidad and Tobago</p>
-    <p>codecanvastt.com · +1 868 466-CODE · keronlewis@live.com</p>
+    <p>codecanvastt.com · +1 868 466-CODE · info@codecanvastt.com<br>Book a call: calendly.com/keronlewis/30min</p>
   </div>
   ${foot()}
 </section>
