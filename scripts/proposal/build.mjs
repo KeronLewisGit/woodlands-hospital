@@ -136,26 +136,108 @@ function caption(key, i, c) {
   return `<figcaption class="cap">${esc(n)}${esc(text)}</figcaption>`;
 }
 
-function screenPages(sec, [key, title, bullets]) {
-  const c = chunks[key];
-  if (!c) throw new Error(`Screenshot missing: ${key}`);
-  const report = key === 'sample-report';
-  return c.chunks.map((file, i) => `
+// Screen pages are packed by measured height. Each section's slices are split into pages, in order, so
+// that a page can hold slices from more than one screen (a slice that starts a new screen mid-page gets a
+// small screen heading). A page may shrink its screenshots a little (to no less than 85% width) to take
+// one more slice, such as a short tail. The split is chosen to avoid half-empty pages first, then to use
+// as few pages as possible, then to shrink as little as possible.
+const CONTENT_W = 7.4 * 96; // letter width minus the 0.55in side margins, in CSS px
+const PAGE_H = 10 * 96; // .page height
+const ITEM_GAP = 16; // .item + .item
+const SAFETY = 6;
+const MIN_SCALE = 0.85;
+const HALF_EMPTY = 0.55; // a page whose content ends above 55% of its height reads as half empty
+
+const headHtml = (sec, title, url, cont) => `<header class="shot-head"><div><p class="eyebrow">${esc(sec.title)}${cont ? ' · continued' : ''}</p><h2>${esc(title)}</h2></div><p class="url">${esc(url)}</p></header>`;
+const subHtml = (title, url) => `<header class="sub-head"><h3>${esc(title)}</h3><p class="url">${esc(url)}</p></header>`;
+const bulletsHtml = (bullets) => `<ul class="bullets">${bullets.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>`;
+
+function sectionSlices(sec) {
+  return sec.screens.flatMap(([key, title, bullets]) => {
+    const c = chunks[key];
+    if (!c) throw new Error(`Screenshot missing: ${key}`);
+    return c.chunks.map((file, i) => ({ key, title, bullets, url: c.url, i, file, cap: caption(key, i, c), report: key === 'sample-report' }));
+  });
+}
+
+/** Renders every piece once in Chrome at the page's content width and returns their outer heights. */
+async function measure(browser, sections) {
+  const pieces = {};
+  const add = (id, h) => { pieces[id] = h; };
+  for (const sec of sections) {
+    add(`foot`, foot());
+    for (const sl of sectionSlices(sec)) {
+      if (sl.i === 0) {
+        add(`head:${sl.key}:0`, headHtml(sec, sl.title, sl.url, false));
+        add(`sub:${sl.key}`, subHtml(sl.title, sl.url));
+        add(`bul:${sl.key}`, bulletsHtml(sl.bullets));
+      } else add(`head:${sl.key}:1`, headHtml(sec, sl.title, sl.url, true));
+      add(`cap:${sl.key}:${sl.i}`, sl.cap);
+    }
+  }
+  const files = [...new Set(sections.flatMap((sec) => sectionSlices(sec).map((sl) => sl.file)))];
+  const file = path.resolve('dist/proposal/measure.html');
+  fs.writeFileSync(file, `<!doctype html><html><head><meta charset="utf-8"><style>${STYLE}</style></head><body>${Object.entries(pieces).map(([id, h]) => `<div data-id="${esc(id)}" style="width:${CONTENT_W}px;display:flex;flex-direction:column">${h}</div>`).join('')}</body></html>`);
+  const page = await browser.newPage();
+  await page.goto('file://' + file, { waitUntil: 'networkidle0' });
+  await page.evaluate(() => document.fonts.ready);
+  const out = await page.evaluate(async (files) => {
+    const h = {};
+    for (const el of document.querySelectorAll('[data-id]')) h[el.dataset.id] = el.getBoundingClientRect().height;
+    const dims = {};
+    for (const f of files) { const im = new Image(); im.src = f; await im.decode(); dims[f] = [im.naturalWidth, im.naturalHeight]; }
+    return { h, dims };
+  }, files.map(img));
+  await page.close();
+  fs.rmSync(file);
+  return { h: out.h, dims: Object.fromEntries(files.map((f) => [f, out.dims[img(f)]])) };
+}
+
+function packSection(sec, { h, dims }) {
+  const budget = PAGE_H - h.foot - SAFETY;
+  const slices = sectionSlices(sec);
+  const imgBox = (sl) => {
+    const [nw, nh] = dims[sl.file];
+    const w = sl.report ? Math.min(CONTENT_W, 6.9 * 96 * nw / nh) : CONTENT_W;
+    return { w, h: w * nh / nw };
+  };
+  // A page holding slices a..b-1: its items, the scale that fits them, the height used.
+  const layout = (a, b) => {
+    const first = slices[a];
+    const headH = h[`head:${first.key}:${first.i > 0 ? 1 : 0}`];
+    const items = slices.slice(a, b).map((sl, k) => {
+      const sub = k > 0 && sl.i === 0;
+      const fixed = (k ? ITEM_GAP : 0) + (sub ? h[`sub:${sl.key}`] : 0) + (sl.i === 0 ? h[`bul:${sl.key}`] : 0) + h[`cap:${sl.key}:${sl.i}`];
+      return { sl, sub, fixed, img: imgBox(sl) };
+    });
+    const fixed = headH + items.reduce((t, it) => t + it.fixed, 0);
+    const imgs = items.reduce((t, it) => t + it.img.h, 0);
+    const scale = Math.min(1, (budget - fixed) / imgs);
+    return { first, items, scale, used: fixed + imgs * scale };
+  };
+  // best[a] = cheapest packing of slices a..end; a lone slice always fits (shrunk if it must be).
+  const best = Array(slices.length + 1).fill(null);
+  best[slices.length] = { cost: 0, pages: [] };
+  for (let a = slices.length - 1; a >= 0; a--) {
+    for (let b = a + 1; b <= slices.length; b++) {
+      const pg = layout(a, b);
+      if (b - a > 1 && pg.scale < MIN_SCALE) break;
+      const cost = (pg.used < HALF_EMPTY * PAGE_H ? 1000 : 0) + 100 + 200 * (1 - pg.scale) + best[b].cost;
+      if (!best[a] || cost < best[a].cost) best[a] = { cost, pages: [pg, ...best[b].pages] };
+    }
+  }
+  const pages = best[0].pages;
+  return pages.map((pg) => `
     <section class="page shot">
-      <header class="shot-head">
-        <div><p class="eyebrow">${esc(sec.title)}${i ? ' · continued' : ''}</p><h2>${esc(title)}</h2></div>
-        <p class="url">${esc(c.url)}</p>
-      </header>
-      ${i === 0 ? `<ul class="bullets">${bullets.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>` : ''}
-      <figure class="${report ? 'report' : ''}"><img src="${img(file)}" alt="${esc(title)}">${caption(key, i, c)}</figure>
+      ${headHtml(sec, pg.first.title, pg.first.url, pg.first.i > 0)}
+      ${pg.items.map(({ sl, sub, img: box }) => `<div class="item">${sub ? subHtml(sl.title, sl.url) : ''}${sl.i === 0 ? bulletsHtml(sl.bullets) : ''}<figure class="${sl.report ? 'report' : ''}"><img src="${img(sl.file)}" alt="${esc(sl.title)}" style="width:${(box.w * pg.scale).toFixed(1)}px;height:${(box.h * pg.scale).toFixed(1)}px">${sl.cap}</figure></div>`).join('')}
       ${foot()}
     </section>`).join('');
 }
 
 const foot = () => `<footer class="foot"><span>${esc(TITLE)}</span><span>${esc(DATE)}</span></footer>`;
 
-const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${esc(TITLE)}</title>
-<style>
+const STYLE = `
   ${FONTS}
   :root { --forest-950: #0b1a13; --forest-900: #123a29; --primary: #1b5a3f; --leaf: #9fd3b0; --clay: #a8491f; --clay-text: #9a4220; --clay-light: #f0a582; --clay-soft: #f7e6dc; --mint-soft: #e2efe5; --bg: #f5f3ec; --ink: #18211c; --ink-2: #3d4842; --ink-3: #5c6660; --line: #dcd8cc; }
   @page { size: Letter; margin: 0.5in 0.55in 0.5in; }
@@ -212,10 +294,19 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>
   figure { margin: 0; display: flex; flex-direction: column; min-height: 0; flex: 1 1 auto; }
   figure img { display: block; max-width: 100%; min-height: 0; flex: 0 1 auto; object-fit: contain; object-position: left top; border: 1px solid var(--line); border-radius: 6px; align-self: flex-start; }
   figure.report img { max-height: 6.9in; box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+  .item { display: flex; flex-direction: column; flex: none; } .item + .item { margin-top: 16px; } .item figure { flex: none; } .item figure img { max-width: none; max-height: none; flex: none; }
+  .sub-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-bottom: 1px solid var(--line); padding-bottom: 4px; margin-bottom: 6px; } .sub-head h3 { font-size: 14pt; }
   .cap { margin: 6px 0 0; font-size: 8.9pt; line-height: 1.38; color: var(--ink-2); border-left: 3px solid var(--clay); padding-left: 8px; flex: none; }
   .phones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 14px 0.15in 0; } .phones figure { display: block; } .phones img { display: block; width: 100%; height: auto; border-radius: 18px; border: 6px solid var(--forest-950); } .phones figcaption { text-align: center; font-size: 9pt; color: var(--ink-3); margin-top: 6px; }
   footer.foot { margin-top: auto; padding-top: 8px; font-size: 7.8pt; color: #8b938d; display: flex; justify-content: space-between; flex: none; }
-</style></head><body>
+`;
+
+const browser = await puppeteer.launch({ executablePath: CHROME, headless: 'new', args: ['--no-sandbox', '--allow-file-access-from-files'] });
+const measured = await measure(browser, SECTIONS);
+const packed = Object.fromEntries(SECTIONS.map((sec) => [sec.id, packSection(sec, measured)]));
+
+const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${esc(TITLE)}</title>
+<style>${STYLE}</style></head><body>
 
 <section class="page band cover">
   ${WORDMARK('#fff', 'rgba(255,255,255,.75)')}
@@ -275,7 +366,7 @@ ${SECTIONS.map((sec) => `
   <p>${esc(sec.intro)}</p>
   <ol>${sec.screens.map((s) => `<li>${esc(s[1])}</li>`).join('')}</ol>
 </section>
-${sec.screens.map((s) => screenPages(sec, s)).join('')}
+${packed[sec.id]}
 `).join('')}
 
 ${PHONES.map((row, i) => `
@@ -399,7 +490,6 @@ ${PHONES.map((row, i) => `
 </body></html>`;
 
 fs.writeFileSync(OUT_HTML, html);
-const browser = await puppeteer.launch({ executablePath: CHROME, headless: 'new', args: ['--no-sandbox', '--allow-file-access-from-files'] });
 const page = await browser.newPage();
 await page.goto('file://' + OUT_HTML, { waitUntil: 'networkidle0' });
 await page.evaluate(() => document.fonts.ready);
