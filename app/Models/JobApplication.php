@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\JobCategory;
+use App\Models\Concerns\HasContactSearch;
 use App\Models\Concerns\HasReference;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -33,7 +34,7 @@ use Illuminate\Support\Carbon;
  */
 class JobApplication extends Model
 {
-    use HasReference;
+    use HasContactSearch, HasReference;
 
     public const string REFERENCE_PREFIX = 'WJ';
 
@@ -53,14 +54,6 @@ class JobApplication extends Model
             'years_experience' => 'integer',
             'status_changed_at' => 'datetime',
         ];
-    }
-
-    #[\Override]
-    protected static function booted(): void
-    {
-        static::saving(function (self $application): void {
-            $application->phone_digits = preg_replace('/\D+/', '', (string) $application->phone) ?: null;
-        });
     }
 
     /** @return BelongsTo<JobPosting, $this> */
@@ -98,16 +91,6 @@ class JobApplication extends Model
             ->when($filters['status'] ?? null, fn (Builder $q, $v) => $q->where('status', $v))
             ->when($filters['category'] ?? null, fn (Builder $q, $v) => $q->where('category', $v))
             ->when($filters['job'] ?? null, fn (Builder $q, $v) => $q->where('job_posting_id', $v))
-            ->when($filters['q'] ?? null, function (Builder $q, $term) {
-                $like = '%'.str_replace(['%', '_'], ['\%', '\_'], (string) $term).'%';
-                $digits = preg_replace('/\D+/', '', (string) $term);
-                $q->where(function (Builder $w) use ($like, $digits) {
-                    $w->where('first_name', 'like', $like)->orWhere('last_name', 'like', $like)
-                        ->orWhere('reference', 'like', $like)->orWhere('email', 'like', $like);
-                    if (strlen((string) $digits) >= 3) {
-                        $w->orWhere('phone_digits', 'like', '%'.$digits.'%');
-                    }
-                });
-            });
+            ->when($filters['q'] ?? null, fn (Builder $q, $term) => self::searchContact($q, (string) $term));
     }
 }

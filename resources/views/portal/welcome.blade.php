@@ -1,4 +1,4 @@
-<x-layouts.portal-auth title="Activate your results portal" lead="Welcome, {{ $patient->first_name }}. Choose a password to finish setting up your account.">
+<x-layouts.portal-auth title="Activate your results portal" :lead="'Welcome, '.$patient->first_name.'. Choose a password to finish setting up your account.'">
     <form method="POST" action="{{ $action }}" class="space-y-5" novalidate>
         @csrf
         <p class="rounded-lg bg-surface-2 px-4 py-3 text-[0.9375rem]">Account: <strong class="break-all">{{ $patient->email }}</strong></p>

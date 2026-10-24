@@ -1,5 +1,5 @@
 @php($main = setting('phone_main'))
-<x-layouts.site title="Contact" description="Contact Woodlands Hospital, 110–111 Carmichael Street, Georgetown. Main line {{ format_phone($main, true) }}.">
+<x-layouts.site title="Contact" :description="'Contact Woodlands Hospital, 110–111 Carmichael Street, Georgetown. Main line '.format_phone($main, true).'.'">
     <x-page-header title="Contact Woodlands" sign="Switchboard" code="☎" photo="georgetown-cathedral" photo-alt="St George’s Cathedral, Georgetown, a few streets from the hospital"
         lead="For an emergency, call the ambulance. For everything else, phone the switchboard or send a message and we will reply." />
 

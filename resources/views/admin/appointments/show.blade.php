@@ -54,8 +54,8 @@
                     <label class="flex min-h-11 items-center gap-3 rounded-lg border border-line px-3"><input type="radio" name="action" value="cancel" x-model="action" class="h-4 w-4 accent-[var(--primary)]"><span><strong>Can’t book</strong> (cancel)</span></label>
                 </fieldset>
                 <div class="grid grid-cols-2 gap-3" x-show="action !== 'cancel'">
-                    <div><label for="date" class="a-label">Date</label><input id="date" name="date" type="date" class="a-input w-full" value="{{ old('date', $suggest->toDateString()) }}" min="{{ today()->toDateString() }}"></div>
-                    <div><label for="time" class="a-label">Time</label><input id="time" name="time" type="time" step="300" class="a-input w-full" value="{{ old('time', $suggest->format('H:i')) }}"></div>
+                    <div><label for="date" class="a-label">Date</label><input id="date" name="date" type="date" :disabled="action === 'cancel'" class="a-input w-full" value="{{ old('date', $suggest->toDateString()) }}" min="{{ today()->toDateString() }}"></div>
+                    <div><label for="time" class="a-label">Time</label><input id="time" name="time" type="time" step="300" :disabled="action === 'cancel'" class="a-input w-full" value="{{ old('time', $suggest->format('H:i')) }}"></div>
                 </div>
                 <div>
                     <label for="message_to_patient" class="a-label">Message to the patient <span class="font-normal text-ink-3">(optional, included in the email)</span></label>

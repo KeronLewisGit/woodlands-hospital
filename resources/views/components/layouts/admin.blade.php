@@ -69,18 +69,18 @@
                     <form action="{{ route('admin.appointments.index') }}" method="GET" role="search" class="relative max-w-md flex-1">
                         <label for="admin-search" class="sr-only">Search appointment requests</label>
                         <x-icon name="search" class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-3" />
-                        <input id="admin-search" data-search name="q" value="{{ input_string(request('q')) }}" class="a-input w-full pl-9 pr-10" placeholder="Search name, phone or reference" autocomplete="off">
+                        <input id="admin-search" data-search name="q" value="{{ input_string(request('q')) }}" class="a-input w-full pl-9 pr-10" placeholder="Name, phone or ref." autocomplete="off">
                         <span class="kbd absolute right-2.5 top-1/2 hidden -translate-y-1/2 sm:inline" aria-hidden="true">/</span>
                     </form>
                 @elseif ($lab)
                     <form action="{{ route('admin.patients.index') }}" method="GET" role="search" class="relative max-w-md flex-1">
                         <label for="admin-search" class="sr-only">Search patients</label>
                         <x-icon name="search" class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-3" />
-                        <input id="admin-search" data-search name="q" value="{{ input_string(request('q')) }}" class="a-input w-full pl-9 pr-10" placeholder="Search patient name, email or hospital no." autocomplete="off">
+                        <input id="admin-search" data-search name="q" value="{{ input_string(request('q')) }}" class="a-input w-full pl-9 pr-10" placeholder="Name, email or hospital no." autocomplete="off">
                     </form>
                 @endif
                 <div class="ml-auto flex items-center gap-1">
-                    <button type="button" class="a-btn w-11 px-0 text-ink-2 hover:bg-surface-2" @click="toggleDensity()" :aria-pressed="(density === 'compact').toString()" aria-label="Compact rows"><x-icon name="rows" /></button>
+                    <button type="button" class="a-btn hidden w-11 px-0 text-ink-2 hover:bg-surface-2 sm:inline-flex" @click="toggleDensity()" :aria-pressed="(density === 'compact').toString()" aria-label="Compact rows"><x-icon name="rows" /></button>
                     <button type="button" class="a-btn w-11 px-0 text-ink-2 hover:bg-surface-2" onclick="toggleTheme()" aria-label="Switch light or dark theme"><x-icon name="moon" class="dark-hide h-5 w-5" /><x-icon name="sun" class="dark-show h-5 w-5" /></button>
                 </div>
             </div>

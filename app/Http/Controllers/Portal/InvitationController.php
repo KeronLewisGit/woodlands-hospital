@@ -21,18 +21,19 @@ class InvitationController extends Controller
 {
     public function show(Request $request, Patient $patient): View|RedirectResponse
     {
+        // Signature first: without a valid link the page says nothing about whether this ID exists or is active.
+        $this->guard($request, $patient);
         if ($patient->isActivated()) {
             return to_route('portal.login')->with('status', 'Your portal is already active. Sign in, or use “Forgot password” if you need a new one.');
         }
-        $this->guard($request, $patient);
 
         return view('portal.welcome', ['patient' => $patient, 'action' => $request->fullUrl()]);
     }
 
     public function accept(Request $request, Patient $patient): RedirectResponse
     {
-        abort_if($patient->isActivated(), 403, 'This link has already been used.');
         $this->guard($request, $patient);
+        abort_if($patient->isActivated(), 403, 'This link has already been used.');
 
         $data = $request->validate([
             'date_of_birth' => [$patient->date_of_birth ? 'required' : 'nullable', 'date'],

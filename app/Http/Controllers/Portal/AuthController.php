@@ -35,7 +35,10 @@ class AuthController extends Controller
         $patient = Auth::guard('patient')->user();
         $patient->forceFill(['last_login_at' => now()])->save();
 
-        return redirect()->intended(route('portal.dashboard'));
+        // The session's "intended" URL is shared with the staff guard: only follow it inside the portal.
+        $intended = (string) $request->session()->pull('url.intended', '');
+
+        return redirect()->to(str_starts_with((string) parse_url($intended, PHP_URL_PATH), '/results') ? $intended : route('portal.dashboard'));
     }
 
     public function logout(Request $request): RedirectResponse

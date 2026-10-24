@@ -34,7 +34,7 @@ class PortalInvitation extends Notification
         /** @var Patient $notifiable */
         return (new MailMessage)
             ->subject('Your Woodlands Hospital results portal')
-            ->greeting("Hello {$notifiable->first_name},")
+            ->greeting('Hello '.md_plain($notifiable->first_name).',')
             ->line('Woodlands Hospital has opened a secure results portal account for you.'.($this->resultsWaiting ? ' A new report is waiting for you there.' : ''))
             ->line('Choose a password to activate it. The link works for '.self::HOURS.' hours and only once.')
             ->action('Set my password', self::url($notifiable))

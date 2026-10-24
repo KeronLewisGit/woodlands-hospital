@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Doctor directory entry, managed by staff (seeded empty: the hospital supplies the list).
  *
  * @property int $id
- * @property string $slug
  * @property string $name
  * @property string|null $title
  * @property string $department
@@ -21,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Doctor extends Model
 {
-    protected $fillable = ['slug', 'name', 'title', 'department', 'qualifications', 'bio', 'is_published', 'sort'];
+    protected $fillable = ['name', 'title', 'department', 'qualifications', 'bio', 'is_published', 'sort'];
 
     #[\Override]
     protected function casts(): array

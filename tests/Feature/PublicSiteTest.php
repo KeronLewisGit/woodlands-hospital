@@ -58,8 +58,8 @@ class PublicSiteTest extends TestCase
 
     public function test_published_doctors_and_sessions_appear(): void
     {
-        $doc = Doctor::create(['slug' => 'dr-a', 'name' => 'Dr Test Person', 'department' => 'cardiology', 'is_published' => true]);
-        Doctor::create(['slug' => 'dr-b', 'name' => 'Dr Hidden Person', 'department' => 'cardiology', 'is_published' => false]);
+        $doc = Doctor::create(['name' => 'Dr Test Person', 'department' => 'cardiology', 'is_published' => true]);
+        Doctor::create(['name' => 'Dr Hidden Person', 'department' => 'cardiology', 'is_published' => false]);
         ClinicSession::create(['department' => 'cardiology', 'doctor_id' => $doc->id, 'weekday' => 2, 'starts_at' => '09:00', 'ends_at' => '12:30', 'is_active' => true]);
         ClinicSession::create(['department' => 'urology', 'label' => 'Hidden clinic', 'weekday' => 3, 'starts_at' => '09:00', 'ends_at' => '12:00', 'is_active' => false]);
 
@@ -106,6 +106,25 @@ class PublicSiteTest extends TestCase
         $this->get(route('jobs.show', 'draft'))->assertNotFound();
         $this->get(route('jobs.show', 'expired'))->assertOk()->assertSee('no longer open');
         $this->get(route('sitemap'))->assertSee(route('jobs.show', $open));
+    }
+
+    public function test_component_titles_are_escaped_once(): void
+    {
+        JobPosting::create(['category' => JobCategory::Nursing, 'employment_type' => EmploymentType::FullTime, 'summary' => 'x', 'location' => 'Georgetown',
+            'slug' => 'theatre', 'title' => 'Theatre & Recovery Nurse', 'status' => JobStatus::Open]);
+
+        $this->get(route('apply.create', ['job' => 'theatre']))
+            ->assertSee('Apply: Theatre &amp; Recovery Nurse', false)
+            ->assertDontSee('&amp;amp;', false);
+    }
+
+    public function test_robots_txt_belongs_to_this_site(): void
+    {
+        foreach (['public/robots.txt', 'deploy/robots.txt'] as $file) {
+            $robots = (string) file_get_contents(base_path($file));
+            $this->assertStringContainsString('Disallow: /results', $robots, $file);
+            $this->assertStringContainsString('woodlandshospital.com/sitemap.xml', $robots, $file);
+        }
     }
 
     public function test_security_headers_and_preview_mode(): void

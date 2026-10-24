@@ -44,7 +44,7 @@ class ApplicationController extends Controller
             'category' => ['required', Rule::enum(JobCategory::class)],
             'first_name' => ['required', 'string', 'max:80'],
             'last_name' => ['required', 'string', 'max:80'],
-            'phone' => ['required', 'string', 'max:30', 'regex:/^(?:\D*\d){7,15}\D*$/'],
+            'phone' => ['required', 'string', 'max:30', phone_rule()],
             'email' => ['required', 'email:rfc', 'max:255'],
             'registration' => ['nullable', 'string', 'max:120'],
             'years_experience' => ['nullable', 'integer', 'min:0', 'max:60'],

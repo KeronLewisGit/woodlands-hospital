@@ -33,10 +33,6 @@ cp "$ROOT/deploy/app.htaccess" "$APP/.htaccess"
 echo "→ Staging public files"
 cp -R "$ROOT/public/build" "$STAGE/build"
 cp -R "$ROOT/public/img" "$STAGE/img"
-# Reserved for public uploads; PHP never runs from it. Patient reports stay in woodlands-app/storage.
-mkdir -p "$STAGE/uploads"
-cp "$ROOT/deploy/uploads.htaccess" "$STAGE/uploads/.htaccess"
-
 cp "$ROOT/public/favicon.svg" "$STAGE/favicon.svg"
 cp "$ROOT/deploy/index.php" "$STAGE/index.php"
 cp "$ROOT/deploy/.htaccess" "$STAGE/.htaccess"

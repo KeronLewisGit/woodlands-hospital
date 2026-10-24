@@ -23,7 +23,7 @@ class NewAppointmentRequest extends Notification
 
         return (new MailMessage)
             ->subject("Appointment request {$a->reference}: {$a->serviceLabel()}")
-            ->line("{$a->full_name} asked for {$a->serviceLabel()}.")
+            ->line(md_plain($a->full_name)." asked for {$a->serviceLabel()}.")
             ->line('Preferred: '.$a->preferred_date->format('l j F Y').', '.mb_strtolower($a->windowLabel()).'.')
             ->line('Phone: '.format_phone($a->phone, true))
             ->action('Confirm or offer a time', route('admin.appointments.show', $a));

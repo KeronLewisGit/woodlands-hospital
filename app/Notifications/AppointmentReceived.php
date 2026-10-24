@@ -24,7 +24,7 @@ class AppointmentReceived extends Notification
 
         return (new MailMessage)
             ->subject("We received your appointment request ({$a->reference})")
-            ->greeting("Hello {$a->first_name},")
+            ->greeting('Hello '.md_plain($a->first_name).',')
             ->line("Thank you for your request for {$a->serviceLabel()}. Your reference is **{$a->reference}**.")
             ->line('You asked for '.$a->preferred_date->format('l j F Y').', '.mb_strtolower($a->windowLabel()).'.')
             ->line('**This is not yet a booking.** Our front desk will confirm a time, or offer the nearest available one, by email or phone.')

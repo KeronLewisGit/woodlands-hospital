@@ -47,7 +47,7 @@ class AppointmentController extends Controller
             'first_name' => ['required', 'string', 'max:80'],
             'last_name' => ['required', 'string', 'max:80'],
             'date_of_birth' => ['nullable', 'date', 'before:today', 'after:1900-01-01'],
-            'phone' => ['required', 'string', 'max:30', 'regex:/^(?:\D*\d){7,15}\D*$/'],
+            'phone' => ['required', 'string', 'max:30', phone_rule()],
             'email' => ['nullable', 'email:rfc', 'max:255'],
             'returning_patient' => ['boolean'],
             'preferred_date' => ['required', 'date', 'after_or_equal:today', 'before:'.today()->addMonths(6)->toDateString()],

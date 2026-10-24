@@ -1,15 +1,8 @@
 <x-layouts.site title="Your results" :mobile-bar="false">
-    <section class="on-dark bg-forest-900 text-white">
-        <div class="wrap flex flex-wrap items-end justify-between gap-6 py-10 md:py-12">
-            <div>
-                <x-sign code="RX" tone="clay">Secure results portal</x-sign>
-                <h1 class="display-2 mt-4">Hello, {{ $patient->first_name }}</h1>
-                <p class="mt-2 text-white/80">Signed in as {{ $patient->email }}@if($patient->hospital_number) · Hospital no. {{ $patient->hospital_number }}@endif</p>
-            </div>
-            <form method="POST" action="{{ route('portal.logout') }}">@csrf<button class="btn btn-on-dark"><x-icon name="log-out" class="h-4 w-4" />Sign out</button></form>
-        </div>
-        <div class="canopy" aria-hidden="true"></div>
-    </section>
+    <x-page-header :title="'Hello, '.$patient->first_name" sign="Secure results portal" code="RX" tone="clay"
+        :lead="'Signed in as '.$patient->email.($patient->hospital_number ? ' · Hospital no. '.$patient->hospital_number : '')">
+        <form method="POST" action="{{ route('portal.logout') }}" class="mt-6">@csrf<button class="btn btn-on-dark"><x-icon name="log-out" class="h-4 w-4" />Sign out</button></form>
+    </x-page-header>
 
     <div class="wrap mt-10">
         @if (session('status'))

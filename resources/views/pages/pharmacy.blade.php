@@ -1,6 +1,6 @@
 @php($wa = setting('pharmacy_whatsapp'))
 <x-layouts.site title="Pharmacy & prescription refills" description="Request a prescription refill from the Woodlands Hospital pharmacy online or on WhatsApp.">
-    <x-page-header title="Pharmacy & refills" sign="{{ setting('pharmacy_hours') ?: 'Pharmacy' }}" code="Rx" photo="pharmacy-shelves" photo-alt="Medicines on pharmacy shelves (illustrative photo)"
+    <x-page-header title="Pharmacy & refills" :sign="setting('pharmacy_hours') ?: 'Pharmacy'" code="Rx" photo="pharmacy-shelves" photo-alt="Medicines on pharmacy shelves (illustrative photo)"
         lead="Send your refill list and we will tell you when it is ready to collect. For questions about a medicine, message the pharmacist on WhatsApp.">
         <div class="mt-7 flex flex-wrap gap-3">
             <a href="#refill" class="btn btn-clay">Request a refill</a>

@@ -66,8 +66,8 @@
                     <span class="font-bold" x-text="tip ? `${tip.value} ${tip.value === '1' ? 'request' : 'requests'}` : ''"></span>
                 </div>
             </div>
-            <details class="mt-4 text-sm">
-                <summary class="cursor-pointer font-semibold text-link">Show as table</summary>
+            <details class="mt-1 text-sm">
+                <summary class="cursor-pointer py-3 font-semibold text-link">Show as table</summary>
                 <div class="mt-3 max-h-64 overflow-auto">
                     <table class="data-table"><thead><tr><th>Date</th><th class="r">Requests</th></tr></thead>
                         <tbody>@foreach ($daily->reverse() as $d)<tr><td>{{ $d['date']->format('D j M') }}</td><td class="r">{{ $d['count'] }}</td></tr>@endforeach</tbody>

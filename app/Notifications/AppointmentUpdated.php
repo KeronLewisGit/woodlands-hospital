@@ -25,7 +25,7 @@ class AppointmentUpdated extends Notification
         $phone = format_phone(setting('phone_main'), true);
         $ext = setting($a->service->extensionKey());
 
-        $mail = (new MailMessage)->greeting("Hello {$a->first_name},");
+        $mail = (new MailMessage)->greeting('Hello '.md_plain($a->first_name).',');
 
         $mail = match ($a->status) {
             AppointmentStatus::Confirmed => $mail->subject("Your appointment is confirmed ({$a->reference})")

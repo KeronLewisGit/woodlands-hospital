@@ -25,16 +25,16 @@
         @else
             <div class="overflow-x-auto">
                 <table class="data-table">
-                    <thead><tr><th>Patient</th><th>Service</th><th>Wants</th><th>Status</th><th>Received</th></tr></thead>
+                    <thead><tr><th>Patient</th><th>Service</th><th>Wants</th><th>Status</th><th class="hidden sm:table-cell">Received</th></tr></thead>
                     <tbody>
                         @foreach ($appointments as $a)
                             @php($soon = $a->status === AppointmentStatus::Requested && $a->preferred_date->lte(today()->addDay()))
                             <tr>
-                                <td><a href="{{ route('admin.appointments.show', $a) }}" class="font-bold hover:text-link">{{ $a->full_name }}</a><span class="block text-sm text-ink-3"><span class="num">{{ $a->reference }}</span> · {{ format_phone($a->phone) }}</span></td>
+                                <td class="min-w-44"><a href="{{ route('admin.appointments.show', $a) }}" class="font-bold hover:text-link">{{ $a->full_name }}</a><span class="block whitespace-nowrap text-sm text-ink-3"><span class="num">{{ $a->reference }}</span> · {{ format_phone($a->phone) }}</span></td>
                                 <td>{{ $a->serviceLabel() }}</td>
                                 <td class="whitespace-nowrap">@if($a->scheduled_for && $a->status !== AppointmentStatus::Cancelled)<span class="font-semibold">{{ $a->scheduled_for->format('D j M, g:i a') }}</span>@else<x-chip :tone="$soon ? 'attention' : 'neutral'" icon="calendar">{{ $a->preferred_date->isToday() ? 'Today' : ($a->preferred_date->isTomorrow() ? 'Tomorrow' : $a->preferred_date->format('D j M')) }} · {{ ucfirst($a->preferred_window) }}</x-chip>@endif</td>
                                 <td><x-status :status="$a->status" /></td>
-                                <td class="whitespace-nowrap text-ink-2">{{ $a->created_at->diffForHumans() }}</td>
+                                <td class="hidden whitespace-nowrap text-ink-2 sm:table-cell">{{ $a->created_at->diffForHumans() }}</td>
                             </tr>
                         @endforeach
                     </tbody>

@@ -1,6 +1,6 @@
 @php($ambulance = setting('ambulance_phone'))
 @php($main = setting('phone_main'))
-<x-layouts.site title="Emergency & ambulance" description="Woodlands Hospital Emergency Room is open 24 hours. Ambulance: {{ format_phone($ambulance) }} or {{ format_phone($main) }} ext {{ setting('ambulance_ext') }}.">
+<x-layouts.site title="Emergency & ambulance" :description="'Woodlands Hospital Emergency Room is open 24 hours. Ambulance: '.format_phone($ambulance).' or '.format_phone($main).' ext '.setting('ambulance_ext').'.'">
     <x-page-header title="Emergency Room & ambulance" sign="Open 24 hours" code="ER" tone="er"
         lead="If someone’s life is in danger, call the ambulance now or come straight to the Emergency Room. You do not need an appointment.">
         <div class="mt-7 flex flex-wrap gap-3">

@@ -1,5 +1,5 @@
 <x-layouts.site title="Careers" description="Nursing, laboratory, radiology, pharmacy and other jobs at Woodlands Hospital, Georgetown.">
-    <x-page-header title="Work at Woodlands" sign="Careers" code="HR" photo="nurses-station" photo-alt="Nurses at the nurses’ station, Woodlands Hospital"
+    <x-page-header title="Work at Woodlands" sign="Careers" code="HR" photo="georgetown-seawall" photo-alt="The Georgetown seawall and beach (illustrative photo)"
         lead="Nurses, technologists, pharmacists and support staff keep a 24-hour hospital running. Apply online with your CV.">
         <div class="mt-7"><a href="{{ route('apply.create') }}" class="btn btn-clay">Send your CV<x-icon name="arrow-right" class="nudge h-4 w-4" /></a></div>
     </x-page-header>

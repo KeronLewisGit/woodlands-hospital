@@ -55,8 +55,10 @@ class AppointmentController extends Controller
     {
         $data = $request->validate([
             'action' => ['required', Rule::in(['confirm', 'reschedule', 'cancel', 'notes'])],
-            'date' => ['nullable', 'required_if:action,confirm,reschedule', 'date', 'after_or_equal:today'],
-            'time' => ['nullable', 'required_if:action,confirm,reschedule', 'date_format:H:i'],
+            // Cancelling or saving notes ignores the (hidden) date and time, so a request whose
+            // preferred day has already passed can still be cancelled.
+            'date' => ['exclude_if:action,cancel,notes', 'required_if:action,confirm,reschedule', 'date', 'after_or_equal:today'],
+            'time' => ['exclude_if:action,cancel,notes', 'required_if:action,confirm,reschedule', 'date_format:H:i'],
             'message_to_patient' => ['nullable', 'string', 'max:1000'],
             'staff_notes' => ['nullable', 'string', 'max:5000'],
             'notify' => ['boolean'],
@@ -66,7 +68,9 @@ class AppointmentController extends Controller
         ]);
 
         $before = $appointment->status;
-        $appointment->staff_notes = $data['staff_notes'] ?? $appointment->staff_notes;
+        if (array_key_exists('staff_notes', $data)) {
+            $appointment->staff_notes = $data['staff_notes'];
+        }
 
         if ($data['action'] !== 'notes') {
             $status = match ($data['action']) {

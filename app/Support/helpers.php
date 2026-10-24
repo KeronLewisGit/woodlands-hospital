@@ -73,6 +73,25 @@ if (! function_exists('input_string')) {
     }
 }
 
+if (! function_exists('phone_rule')) {
+    /** Validation rule for a phone number typed any common way: 7 to 15 digits, any separators. */
+    function phone_rule(): string
+    {
+        return 'regex:/^(?:\\D*\\d){7,15}\\D*$/';
+    }
+}
+
+if (! function_exists('md_plain')) {
+    /**
+     * Text typed by a visitor, made safe for a Markdown mail line: Markdown punctuation is
+     * backslash-escaped, so "[Click](https://…)" in a name arrives as plain text, never as a link.
+     */
+    function md_plain(?string $text): string
+    {
+        return (string) preg_replace('/([\\\\`*_\[\]()#!<>|~])/', '\\\\$1', (string) $text);
+    }
+}
+
 if (! function_exists('lines_to_array')) {
     /**
      * Textarea with one item per line, bullets optional, to a clean list.

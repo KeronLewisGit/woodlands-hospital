@@ -29,7 +29,10 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.dashboard'));
+        // The session's "intended" URL is shared with the patient guard: only follow it inside the dashboard.
+        $intended = (string) $request->session()->pull('url.intended', '');
+
+        return redirect()->to(str_starts_with((string) parse_url($intended, PHP_URL_PATH), '/admin') ? $intended : route('admin.dashboard'));
     }
 
     public function logout(Request $request): RedirectResponse

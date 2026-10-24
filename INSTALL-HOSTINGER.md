@@ -11,7 +11,6 @@ public_html/
 ├── index.php  .htaccess  robots.txt  favicon.svg  setup.php
 ├── build/                 compiled CSS, JS and fonts
 ├── img/                   site photography (WebP, three sizes each)
-├── uploads/               reserved for public uploads (scripts never run here; patient reports are NOT here)
 └── woodlands-app/         the Laravel application, including private patient reports in storage/ (blocked from the web by its own .htaccess)
 ```
 
@@ -22,7 +21,7 @@ Before you start, do steps 1–4 of **Prepare hPanel** in Option B below (domain
 3. Open `https://www.woodlandshospital.com/setup.php?token=YOUR_TOKEN`. It generates the app key, migrates, creates the first staff account and deletes itself.
 4. Remove `SETUP_TOKEN` from `.env`.
 
-To update later, build a new zip, and upload and extract it over the old files. `woodlands-app/.env`, `woodlands-app/storage/` (patient reports, CVs, logs) and `uploads/` are not in the zip, so they are kept. Then visit `/setup.php?token=…` again if the release has new migrations (add a `SETUP_TOKEN` first; once a staff account exists the installer only migrates and never creates or resets accounts), or run `php artisan migrate --force` over SSH from `woodlands-app/`.
+To update later, build a new zip, and upload and extract it over the old files. `woodlands-app/.env` and `woodlands-app/storage/` (patient reports, CVs, logs) are not in the zip, so they are kept. Then visit `/setup.php?token=…` again if the release has new migrations (add a `SETUP_TOKEN` first; once a staff account exists the installer only migrates and never creates or resets accounts), or run `php artisan migrate --force` over SSH from `woodlands-app/`.
 
 ## Option B – Hostinger Git deployment (for ongoing development)
 

@@ -29,7 +29,7 @@ class ContactController extends Controller
             'topic' => ['required', Rule::enum(MessageTopic::class)],
             'name' => ['required', 'string', 'max:120'],
             'email' => ['nullable', 'required_without:phone', 'email:rfc', 'max:255'],
-            'phone' => ['nullable', 'required_without:email', 'string', 'max:30', 'regex:/^(?:\D*\d){7,15}\D*$/'],
+            'phone' => ['nullable', 'required_without:email', 'string', 'max:30', phone_rule()],
             'body' => ['required', 'string', 'max:3000'],
         ], [
             'email.required_without' => 'Give us an email address or a phone number so we can reply.',

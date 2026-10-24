@@ -4,7 +4,7 @@
     $clinics = department_options(['clinic']);
 @endphp
 <x-layouts.site title="Request an appointment" description="Request a clinic, specialist, radiology or laboratory appointment at Woodlands Hospital. We confirm a time with you by email or phone.">
-    <x-page-header title="Request an appointment" sign="Front desk" code="FD" photo="ultrasound" photo-alt="A sonographer beside an ultrasound machine at Woodlands Hospital"
+    <x-page-header title="Request an appointment" sign="Front desk" code="FD" photo="ct-suite" photo-alt="The CT suite at Woodlands Hospital"
         lead="Tell us what you need and when suits you. The front desk confirms a time, or offers the nearest one, by email or phone. Nothing is booked until we confirm." />
 
     <div class="wrap mt-12 grid gap-12 lg:grid-cols-[1fr_20rem]">

@@ -1,5 +1,5 @@
 <x-layouts.site title="Apply" description="Apply for a job at Woodlands Hospital, Georgetown.">
-    <x-page-header title="{{ $selected ? 'Apply: '.$selected->title : 'Send your application' }}" sign="Careers" code="HR"
+    <x-page-header :title="$selected ? 'Apply: '.$selected->title : 'Send your application'" sign="Careers" code="HR"
         lead="It takes about five minutes. Have your CV ready as a PDF or Word file." />
     <div class="wrap mt-12">
         <form method="POST" action="{{ route('apply.store') }}" enctype="multipart/form-data" class="max-w-3xl space-y-6" novalidate>

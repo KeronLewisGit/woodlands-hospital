@@ -29,7 +29,7 @@ class RefillController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:120'],
             'date_of_birth' => ['nullable', 'date', 'before:today', 'after:1900-01-01'],
-            'phone' => ['required', 'string', 'max:30', 'regex:/^(?:\D*\d){7,15}\D*$/'],
+            'phone' => ['required', 'string', 'max:30', phone_rule()],
             'email' => ['nullable', 'email:rfc', 'max:255'],
             'medications' => ['required', 'string', 'max:2000'],
             'prescriber' => ['nullable', 'string', 'max:120'],

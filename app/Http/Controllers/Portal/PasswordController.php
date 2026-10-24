@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Portal;
 
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
-use App\Notifications\PortalInvitation;
-use App\Support\Notify;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,8 +31,7 @@ class PasswordController extends Controller
             Password::broker('patients')->sendResetLink(['email' => $email]);
         } elseif ($patient && Cache::add('portal-invite:'.$patient->id, true, now()->addMinutes(10))) {
             // Never activated: a fresh invitation (at most every 10 minutes) instead of a reset link.
-            $patient->forceFill(['invited_at' => now()])->save();
-            Notify::person($patient, new PortalInvitation);
+            $patient->invite();
         }
 
         // Same answer whether or not the address exists.

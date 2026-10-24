@@ -17,7 +17,7 @@ class SettingController extends Controller
 
     public function update(Request $request): RedirectResponse
     {
-        $phone = ['required', 'string', 'max:30', 'regex:/^(?:\D*\d){7,15}\D*$/'];
+        $phone = ['required', 'string', 'max:30', phone_rule()];
         $ext = ['nullable', 'string', 'max:10', 'regex:/^\d{1,6}$/'];
         $data = $request->validate([
             'phone_main' => $phone,

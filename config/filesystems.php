@@ -48,17 +48,6 @@ return [
             'report' => false,
         ],
 
-        // Project photos uploaded in the admin. They sit inside the web root
-        // (public/ locally, public_html/ on Hostinger) so no storage symlink is needed.
-        'uploads' => [
-            'driver' => 'local',
-            'root' => public_path('uploads'),
-            'url' => '/uploads',
-            'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
-        ],
-
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

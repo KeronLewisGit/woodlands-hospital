@@ -26,7 +26,7 @@ class NewSubmission extends Notification
     {
         $mail = (new MailMessage)->subject($this->subject);
         foreach ($this->lines as $line) {
-            $mail->line($line);
+            $mail->line(md_plain($line));
         }
 
         return $mail->action($this->action, $this->url);

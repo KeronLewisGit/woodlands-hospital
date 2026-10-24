@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Notifications\PatientResetPassword;
+use App\Notifications\PortalInvitation;
+use App\Support\Notify;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -60,6 +62,13 @@ class Patient extends Authenticatable
     public function isActivated(): bool
     {
         return $this->password !== null && $this->activated_at !== null;
+    }
+
+    /** Emails a fresh portal invitation. The new invited_at is part of the link, so older links stop working. */
+    public function invite(bool $resultsWaiting = false): void
+    {
+        $this->forceFill(['invited_at' => now()])->save();
+        Notify::person($this, new PortalInvitation($resultsWaiting));
     }
 
     /** An account without a password can never sign in (Auth::attempt fails on a null hash). */

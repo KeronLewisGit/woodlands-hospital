@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
-use App\Notifications\PortalInvitation;
-use App\Support\Notify;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -36,7 +34,7 @@ class PatientController extends Controller
         $patient->save();
 
         if ($request->boolean('send_invite', true)) {
-            $this->sendInvitation($patient);
+            $patient->invite();
 
             return to_route('admin.patients.show', $patient)->with('status', "Portal record created and an invitation emailed to {$patient->email}.");
         }
@@ -75,15 +73,9 @@ class PatientController extends Controller
         if ($patient->isActivated()) {
             return back()->with('status', 'This patient has already activated their portal. If they forgot the password, they can use “Forgot password” on the sign-in page.');
         }
-        $this->sendInvitation($patient);
+        $patient->invite();
 
         return back()->with('status', "A new invitation was emailed to {$patient->email}. Earlier links no longer work.");
-    }
-
-    private function sendInvitation(Patient $patient, bool $resultsWaiting = false): void
-    {
-        $patient->forceFill(['invited_at' => now()])->save();
-        Notify::person($patient, new PortalInvitation($resultsWaiting));
     }
 
     /** @return array<string, mixed> */

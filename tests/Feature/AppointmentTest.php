@@ -160,6 +160,46 @@ class AppointmentTest extends TestCase
         Notification::assertNothingSent();
     }
 
+    public function test_a_request_whose_day_has_passed_can_still_be_cancelled(): void
+    {
+        $desk = User::factory()->create(['role' => Role::FrontDesk]);
+        $this->post(route('appointments.store'), $this->valid());
+        $a = AppointmentRequest::sole();
+        $a->forceFill(['preferred_date' => today()->subDays(2)])->save();
+
+        // The form still posts its hidden (suggested, now past) date and time when "Can't book" is chosen.
+        $this->actingAs($desk)->patch(route('admin.appointments.update', $a), [
+            'action' => 'cancel', 'date' => today()->subDays(2)->toDateString(), 'time' => '09:00', 'notify' => '0',
+        ])->assertSessionHasNoErrors();
+        $this->assertSame(AppointmentStatus::Cancelled, $a->fresh()?->status);
+    }
+
+    public function test_staff_notes_can_be_cleared(): void
+    {
+        $desk = User::factory()->create(['role' => Role::FrontDesk]);
+        $this->post(route('appointments.store'), $this->valid());
+        $a = AppointmentRequest::sole();
+        $a->forceFill(['staff_notes' => 'Old note'])->save();
+
+        $this->actingAs($desk)->patch(route('admin.appointments.update', $a), ['action' => 'notes', 'staff_notes' => '']);
+        $this->assertNull($a->fresh()?->staff_notes);
+
+        // The decision form has no notes field, so deciding keeps them.
+        $a->forceFill(['staff_notes' => 'Keep me'])->save();
+        $this->actingAs($desk)->patch(route('admin.appointments.update', $a), ['action' => 'cancel', 'notify' => '0']);
+        $this->assertSame('Keep me', $a->fresh()?->staff_notes);
+    }
+
+    public function test_markdown_typed_into_a_name_never_becomes_a_link_in_email(): void
+    {
+        $this->post(route('appointments.store'), $this->valid(['first_name' => '[Reset your password](https://evil.example/login)']));
+        $a = AppointmentRequest::sole();
+
+        $html = (string) (new AppointmentReceived($a))->toMail(new AnonymousNotifiable)->render();
+        $this->assertStringNotContainsString('href="https://evil.example', $html);
+        $this->assertStringContainsString('[Reset your password](https://evil.example/login)', html_entity_decode($html));
+    }
+
     public function test_lab_staff_cannot_handle_appointments(): void
     {
         $lab = User::factory()->create(['role' => Role::Lab]);

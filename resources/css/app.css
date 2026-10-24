@@ -39,7 +39,6 @@
     --forest-950: #0b1a13;
     --forest-900: #123a29;
     --forest-800: #1a4a35;
-    --forest-700: #245d44;
     --leaf: #9fd3b0;
 
     --primary: #1b5a3f;
@@ -61,7 +60,6 @@
 
     /* Data and state (series hue validated for both surfaces) */
     --series-1: #2f7d5a;
-    --series-track: #e2efe5;
     --good: #2f7d4a;
     --attention: #c77700;
     --critical: #c4122f;
@@ -94,7 +92,6 @@
         --mint-soft: #16261d;
         --er-text: #ff8a8f;
         --series-1: #5cb88a;
-        --series-track: #1b2a22;
         --good: #5cb88a;
         --attention: #f0a73a;
         --critical-text: #ff8a8f;
@@ -123,7 +120,6 @@
     --mint-soft: #16261d;
     --er-text: #ff8a8f;
     --series-1: #5cb88a;
-    --series-track: #1b2a22;
     --good: #5cb88a;
     --attention: #f0a73a;
     --critical-text: #ff8a8f;
@@ -147,20 +143,15 @@
     --color-link: var(--link);
     --color-forest-950: var(--forest-950);
     --color-forest-900: var(--forest-900);
-    --color-forest-800: var(--forest-800);
-    --color-forest-700: var(--forest-700);
     --color-leaf: var(--leaf);
     --color-primary: var(--primary);
-    --color-primary-ink: var(--primary-ink);
     --color-clay: var(--clay);
     --color-clay-text: var(--clay-text);
     --color-clay-soft: var(--clay-soft);
-    --color-clay-light: var(--clay-light);
     --color-mint-soft: var(--mint-soft);
     --color-er: var(--er);
     --color-er-text: var(--er-text);
     --color-series: var(--series-1);
-    --color-series-track: var(--series-track);
 
     --shadow-sm: var(--shadow-sm);
     --shadow-md: var(--shadow-md);
@@ -238,7 +229,6 @@
      */
     .canopy { height: 22px; background-repeat: repeat-x; background-position: left bottom; background-size: 220px 22px;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='22' viewBox='0 0 220 22'%3E%3Cpath d='M0 21 C6 21 8 10 18 10 C26 10 27 4 36 4 C46 4 47 12 54 12 C60 12 62 7 70 7 C79 7 80 15 88 15 C94 15 96 2 108 2 C120 2 121 13 130 13 C137 13 139 8 147 8 C156 8 157 16 165 16 C171 16 173 6 182 6 C192 6 193 14 201 14 C208 14 210 21 220 21' fill='none' stroke='%239fd3b0' stroke-opacity='.55' stroke-width='1.5'/%3E%3C/svg%3E"); }
-    .canopy-light { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='22' viewBox='0 0 220 22'%3E%3Cpath d='M0 21 C6 21 8 10 18 10 C26 10 27 4 36 4 C46 4 47 12 54 12 C60 12 62 7 70 7 C79 7 80 15 88 15 C94 15 96 2 108 2 C120 2 121 13 130 13 C137 13 139 8 147 8 C156 8 157 16 165 16 C171 16 173 6 182 6 C192 6 193 14 201 14 C208 14 210 21 220 21' fill='none' stroke='%231b5a3f' stroke-opacity='.35' stroke-width='1.5'/%3E%3C/svg%3E"); }
 
     .prose-copy p + p, .prose-copy ul, .prose-copy p + ul, .prose-copy ul + p { margin-top: 1rem; }
     .prose-copy h2 { font-size: 1.6rem; margin-top: 2.5rem; margin-bottom: 0.5rem; }

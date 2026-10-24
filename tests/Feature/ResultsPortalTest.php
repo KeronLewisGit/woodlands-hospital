@@ -311,6 +311,42 @@ class ResultsPortalTest extends TestCase
         Notification::assertNotSentTo($alice, PortalInvitation::class);
     }
 
+    public function test_unsigned_invitation_links_reveal_nothing_about_the_patient(): void
+    {
+        $active = $this->patient('active@example.test');
+        $invited = $this->patient('invited@example.test', active: false);
+        $invited->forceFill(['invited_at' => now()])->save();
+
+        $this->get(route('portal.invite', $active))->assertForbidden();
+        $this->get(route('portal.invite', $invited))->assertForbidden();
+        $this->post(route('portal.invite.accept', $active), ['password' => 'x'])->assertForbidden();
+    }
+
+    public function test_invitation_greeting_is_escaped_once(): void
+    {
+        $p = Patient::create(['first_name' => "Seán O'Brien", 'last_name' => 'Test', 'email' => 'obrien@example.test']);
+        $p->forceFill(['invited_at' => now()])->save();
+
+        $this->get(PortalInvitation::url($p))->assertOk()
+            ->assertSee('Welcome, Seán O&#039;Brien.', false)
+            ->assertDontSee('&amp;#039;', false);
+    }
+
+    public function test_each_sign_in_only_follows_its_own_intended_url(): void
+    {
+        $this->patient('alice@example.test');
+        $this->get('/admin')->assertRedirect(route('login'));
+        $this->post(route('portal.login'), ['email' => 'alice@example.test', 'password' => 'correct horse battery'])
+            ->assertRedirect(route('portal.dashboard'));
+        $this->post(route('portal.logout'));
+
+        $staff = User::factory()->create(['email' => 'desk@example.test', 'role' => Role::FrontDesk]);
+        $this->get(route('portal.dashboard'))->assertRedirect(route('portal.login'));
+        $this->post(route('login'), ['email' => 'desk@example.test', 'password' => 'password'])
+            ->assertRedirect(route('admin.dashboard'));
+        $this->assertAuthenticatedAs($staff, 'web');
+    }
+
     public function test_deleting_a_report_removes_the_file(): void
     {
         $alice = $this->patient('alice@example.test');

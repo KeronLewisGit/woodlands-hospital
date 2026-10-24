@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Portal\ResultController as PortalResults;
 use App\Models\Patient;
 use App\Models\PatientResult;
-use App\Notifications\PortalInvitation;
 use App\Notifications\ResultsReady;
 use App\Support\Notify;
 use Illuminate\Http\RedirectResponse;
@@ -51,8 +50,7 @@ class ResultController extends Controller
                 $message .= ' They have been emailed that a new report is ready.';
             } else {
                 // Not activated yet: the invitation itself says a report is waiting.
-                $patient->forceFill(['invited_at' => now()])->save();
-                Notify::person($patient, new PortalInvitation(resultsWaiting: true));
+                $patient->invite(resultsWaiting: true);
                 $message .= ' Their portal is not active yet, so an invitation was emailed.';
             }
             $result->forceFill(['notified_at' => now()])->save();

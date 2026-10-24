@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
-use App\Support\Slug;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -24,9 +23,7 @@ class DoctorController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $data = $this->validated($request);
-        $data['slug'] = Slug::unique(Doctor::class, $data['name'], 'doctor');
-        Doctor::create($data);
+        Doctor::create($this->validated($request));
 
         return to_route('admin.doctors.index')->with('status', 'Doctor added to the directory.');
     }

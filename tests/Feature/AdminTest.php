@@ -110,7 +110,6 @@ class AdminTest extends TestCase
         $admin = $this->user(Role::Admin);
         $this->actingAs($admin)->post(route('admin.doctors.store'), ['name' => 'Dr Example Name', 'department' => 'paediatrics', 'title' => 'Consultant Paediatrician', 'is_published' => '1', 'sort' => 10])->assertRedirect();
         $doc = Doctor::sole();
-        $this->assertSame('dr-example-name', $doc->slug);
         $this->get(route('doctors'))->assertSee('Dr Example Name')->assertSee('Consultant Paediatrician');
 
         $this->actingAs($admin)->put(route('admin.doctors.update', $doc), ['name' => 'Dr Example Name', 'department' => 'paediatrics', 'sort' => 10]);

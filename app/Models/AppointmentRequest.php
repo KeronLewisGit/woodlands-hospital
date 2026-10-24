@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\AppointmentService;
 use App\Enums\AppointmentStatus;
+use App\Models\Concerns\HasContactSearch;
 use App\Models\Concerns\HasReference;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -42,7 +43,7 @@ use Illuminate\Support\Carbon;
  */
 class AppointmentRequest extends Model
 {
-    use HasReference;
+    use HasContactSearch, HasReference;
 
     public const string REFERENCE_PREFIX = 'WA';
 
@@ -72,14 +73,6 @@ class AppointmentRequest extends Model
             'has_referral' => 'boolean',
             'status_changed_at' => 'datetime',
         ];
-    }
-
-    #[\Override]
-    protected static function booted(): void
-    {
-        static::saving(function (self $a): void {
-            $a->phone_digits = preg_replace('/\D+/', '', (string) $a->phone) ?: null;
-        });
     }
 
     /** @return BelongsTo<Doctor, $this> */
@@ -127,16 +120,6 @@ class AppointmentRequest extends Model
         $query
             ->when($filters['status'] ?? null, fn (Builder $q, $v) => $q->where('status', $v))
             ->when($filters['service'] ?? null, fn (Builder $q, $v) => $q->where('service', $v))
-            ->when($filters['q'] ?? null, function (Builder $q, $term) {
-                $like = '%'.str_replace(['%', '_'], ['\%', '\_'], (string) $term).'%';
-                $digits = preg_replace('/\D+/', '', (string) $term);
-                $q->where(function (Builder $w) use ($like, $digits) {
-                    $w->where('first_name', 'like', $like)->orWhere('last_name', 'like', $like)
-                        ->orWhere('reference', 'like', $like)->orWhere('email', 'like', $like);
-                    if (strlen((string) $digits) >= 3) {
-                        $w->orWhere('phone_digits', 'like', '%'.$digits.'%');
-                    }
-                });
-            });
+            ->when($filters['q'] ?? null, fn (Builder $q, $term) => self::searchContact($q, (string) $term));
     }
 }
